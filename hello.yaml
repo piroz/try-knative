@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hello
+  name: hello
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+      - image: ghcr.io/knative/helloworld-go:latest
+        name: hello
+        ports:
+        - containerPort: 8080
+        env:
+            - name: TARGET
+              value: "World"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello
+spec:
+  selector:
+    app: hello
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30080
